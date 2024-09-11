@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch(`/api/photos?page=${page}&city=${city}`);
       const data = await response.json();
+      if (!data.photos[0]) {
+        alert("photo!");
+        return;
+      }
 
       gallery.innerHTML = data.photos
         .map(
