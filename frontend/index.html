@@ -7,10 +7,22 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="photo-gallery" class="gallery"></div>
-    <div class="pagination">
+    <div class="container">
+      <h1>Photo Gallery</h1>
+
+      <label for="city-select">Choose a city:</label>
+      <select id="city-select">
+        <option value="Istanbul">Istanbul</option>
+        <option value="Ankara">Ankara</option>
+        <option value="Izmir">Izmir</option>
+        <option value="Antalya">Antalya</option>
+        <option value="Bursa">Bursa</option>
+      </select>
+
+      <div id="photo-gallery" class="gallery"></div>
+      <div id="page-info"></div>
+
       <button id="prev-btn">Previous</button>
-      <span id="page-info">Page 1</span>
       <button id="next-btn">Next</button>
     </div>
     <script src="script.js"></script>
