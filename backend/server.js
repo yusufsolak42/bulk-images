@@ -4,44 +4,29 @@ const fs = require("fs");
 
 const app = express();
 const port = 3000;
+const limit = 10; // Pagination limit
 
-const imagesDir = path.join(__dirname, "../images");
+const imagesDir = path.join(__dirname, "../images"); //directory of image assets
 
 // Serve static files from the "frontend" directory
 app.use(express.static(path.join(__dirname, "../frontend")));
 app.use("/images", express.static(imagesDir));
 
-
-
 // API endpoint to get photos with pagination
 app.get("/api/photos", (req, res) => {
-  const city = req.query.city.toLowerCase();
-   // Get the city from query parameters
-  console.log(city);
-  
   const page = parseInt(req.query.page) || 1;
-  const limit = 10;
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
 
-  if (!city) {
-    return res.status(400).json({ error: "City is required" });
-  }
-
-  const cityFolder = path.join(imagesDir, city); // Point to the city folder
-  app.use("/images", express.static(cityFolder));
-
-
-  if (!fs.existsSync(cityFolder)) {   // Check if the city folder exists
-    return res.status(404).json({ error: "City not found" }+cityFolder);
-  }
-
-  fs.readdir(cityFolder, (err, files) => {
+  fs.readdir(imagesDir, (err, files) => {
+    //read the files from images directory
     if (err) {
-      return res.status(500).json({ error: "Failed to read images directory" });
+      return res
+        .status(500)
+        .json({ message: "Failed to read image directory" });
     }
 
-    // Filter image files
+    // Filter image files (only .jpg, .jpeg, .png)
     const imageFiles = files.filter((file) =>
       [".jpg", ".jpeg", ".png"].includes(path.extname(file).toLowerCase())
     );

@@ -3,20 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const pageInfo = document.getElementById("page-info");
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
-  const citySelect = document.getElementById("city-select");
-
-
   let currentPage = 1;
-  let totalPages = 1;
+  let totalPages; // Declare totalPages here to make it accessible in event listeners
+  const limit = 10;
 
-  const fetchPhotos = async (page, city) => {
+  const fetchPhotos = async (page) => {
     try {
-      const response = await fetch(`/api/photos?page=${page}&city=${city}`);
+      const response = await fetch(`/api/photos?page=${page}&limit=${limit}`);
       const data = await response.json();
-      if (!data.photos[0]) {
-        alert("photo!");
-        return;
-      }
 
       gallery.innerHTML = data.photos
         .map(
@@ -31,24 +25,15 @@ document.addEventListener("DOMContentLoaded", () => {
       pageInfo.textContent = `Page ${page} of ${data.totalPages}`;
 
       totalPages = data.totalPages;
-      updatePaginationButtons();
+
+      // Enable/Disable buttons based on the current page
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
     } catch (error) {
       console.error("Fetch error:", error);
       gallery.innerHTML = "<p>Failed to load photos.</p>";
     }
   };
-
-  const updatePaginationButtons = () => {
-    prevBtn.disabled = currentPage === 1;
-    nextBtn.disabled = currentPage === totalPages;
-  };
-
-  // Handle city change
-  citySelect.addEventListener("change", () => {
-    selectedCity = citySelect.value;
-    currentPage = 1; // Reset to the first page
-    fetchPhotos(currentPage, selectedCity);
-  });
 
   prevBtn.addEventListener("click", () => {
     if (currentPage > 1) {
@@ -64,6 +49,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  selectedCity = citySelect.value;
-  fetchPhotos(currentPage, selectedCity); // Initial fetch
+  fetchPhotos(currentPage); // Initial fetch
 });
