@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 const limit = 10; // Pagination limit
 
-const imagesDir = path.join(__dirname, "../images"); //directory of image assets
+const imagesDir = path.join(__dirname, "../images/cali"); //directory of image assets
 
 // Serve static files from the "frontend" directory
 app.use(express.static(path.join(__dirname, "../frontend")));
